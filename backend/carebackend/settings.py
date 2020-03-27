@@ -81,8 +81,8 @@ DATABASES = {
         'OPTIONS': {
             'options': '-c search_path=django,supportlocal,public'
         },
-        'USER': 'supportlocal',
-        'PASSWORD': 'supp0rtl0cal',
+        'USER': 'postgres',
+        'PASSWORD': 'L0c4lL0c4l',
         'NAME': 'postgres'
     }
 }

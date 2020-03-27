@@ -8,3 +8,4 @@ services:
         - ./postgres-data:/var/lib/postgresql/data/
       environment:
         - POSTGRES_PASSWORD=L0c4lL0c4l
+        - PGDATA=/tmp

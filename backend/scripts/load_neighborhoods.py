@@ -19,17 +19,17 @@ area = Area.objects.get(key=area_to_use)
 df = pd.read_csv(fl)
 
 for _, row in df.iterrows():
-    print("Processing", row['Neighborhood'])
+    print("Processing", row['name'])
     try:
-        n = Neighborhood.objects.get(key=row['DB Key'])
+        n = Neighborhood.objects.get(key=row['key'])
     except Neighborhood.DoesNotExist:
         if insert_if_not_found:
-            n = Neighborhood(name=row['Neighborhood'])
-            n.key = row['DB Key']
+            n = Neighborhood(name=row['name'])
+            n.key = row['key']
         else:
-            print("No DB Key match and not inserting, continuing...")
+            print("No key match and not inserting, continuing...")
             continue
-    if row['GeoJSON'] and not pd.isna(row['GeoJSON']):
+    if row.get('GeoJSON') and not pd.isna(row.get('GeoJSON')):
         if row['GeoJSON'].startswith('[[['):
             row['GeoJSON'] = row['GeoJSON'][1:-1]
         if not row['GeoJSON'].startswith('[['):
@@ -42,11 +42,13 @@ for _, row in df.iterrows():
         lng = centroid.x
     elif row.get('Location'):
         lat,lng = [x.strip() for x in row['Location'].split(',')]
+    elif row.get('lat') and row.get('lng'):
+        lat, lng = row['lat'], row['lng']
     else:
         print("missing necessary data!")
         continue
     n.lat = lat
     n.lng = lng
     n.area = area
-    n.rank = row.get('Rank') if not pd.isna(row.get('Rank')) else None
+    n.rank = row.get('rank') if not pd.isna(row.get('rank')) else None
     n.save()
